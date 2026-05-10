@@ -1,20 +1,58 @@
 pipeline {
-    agent any 
+    agent any
     stages {
-        stage('Build') { 
+        stage('install-pip-deps') {
             steps {
-                // 
+                //
             }
         }
-        stage('Test') { 
+
+        stage('deploy-to-dev') {
             steps {
-                // 
+            //
             }
         }
-        stage('Deploy') { 
+
+        stage('tests-on-dev') {
             steps {
-                // 
+            //
             }
         }
+
+        stage('deploy-to-stg') {
+            steps {
+            //
+            }
+        }
+
+        stage('tests-on-stg') {
+            steps {
+            //
+            }
+        }
+
+        stage('deploy-to-preprod') {
+            steps {
+            //
+            }
+        }
+
+        stage('tests-on-preprod') {
+            steps {
+            //
+            }
+        }
+
+        stage('deploy-to-prod') {
+            steps {
+            //
+            }
+        }
+
+        stage('tests-on-prod') {
+            steps {
+            //
+            }
+        } 
     }
 }
