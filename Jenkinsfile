@@ -1,57 +1,82 @@
+def build() {
+    echo 'Installing all required dependencies...'
+    git branch: 'main', poll: false, url: 'https://github.com/mtararujs/python-greetings'
+    sh 'ls'
+    sh 'python3 -m venv venv'
+    sh './venv/bin/python -m pip install -r requirements.txt'
+    echo "Dependencies successfully installed.."
+}
+
+def deploy(String environment, int port){
+    echo "Deployment to ${environment} environment has started.."
+    git branch: 'main', poll: false, url: 'https://github.com/mtararujs/python-greetings'
+    sh "pm2 delete greetings-app-${environment} || true"
+    sh "pm2 start app.py --name greetings-app-${environment} --interpreter ./venv/bin/python -- --port ${port}"
+    echo "Deployment to ${environment} environment finished.."
+}
+
+def test(String environment){
+    echo "Testing greetings app on ${environment} environment has started.."
+    git branch: 'main', poll: false, url: 'https://github.com/mtararujs/course-js-api-framework'
+    sh 'npm install'
+    sh "npm run greetings greetings_${environment}"
+    echo "Testing greetings app on ${environment} environment finished.."
+}
+
 pipeline {
     agent any
     stages {
         stage('install-pip-deps') {
             steps {
-                echo 'Installing all required dependencies...'
+                script { installDeps() }
             }
         }
 
         stage('deploy-to-dev') {
             steps {
-            echo 'Deploying to DEV environment...'
+                script { deploy('dev', 7001) }
             }
         }
 
         stage('tests-on-dev') {
             steps {
-            echo 'Running tests on DEV environment...'
+                script { test('dev') }
             }
         }
 
         stage('deploy-to-stg') {
             steps {
-            echo 'Deploying to STG environment...'
+                script { deploy('stg', 7002) }
             }
         }
 
         stage('tests-on-stg') {
             steps {
-            echo 'Running tests on STG environment...'
+                script { test('stg') }
             }
         }
 
         stage('deploy-to-preprod') {
             steps {
-            echo 'Deploying to PREPROD environment...'
+                script { deploy('preprod', 7003) }
             }
         }
 
         stage('tests-on-preprod') {
             steps {
-            echo 'Running tests on PREPROD environment...'
+                script { test('preprod') }
             }
         }
 
         stage('deploy-to-prod') {
             steps {
-            echo 'Deploying to PROD environment...'
+                script { deploy('prod', 7004) }
             }
         }
 
         stage('tests-on-prod') {
             steps {
-            echo 'Running tests on PROD environment...'
+                script { test('prod') }
             }
         } 
     }
