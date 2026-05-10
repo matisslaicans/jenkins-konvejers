@@ -28,7 +28,7 @@ pipeline {
     stages {
         stage('install-pip-deps') {
             steps {
-                script { installDeps() }
+                script { build() }
             }
         }
 
